@@ -45,11 +45,11 @@ app.use(express.urlencoded({extended: true}))
 app.use("/uploads", express.static("uploads"))
 
 app.post("/upload", upload.single('file'), function(req, res){
-  console.log("anik")
   const videoPath = req.file.path
+  console.log(`videoPath ${videoPath}`)
   const { scale, bitrateVideo, bitrateAudio } = req.body;
-  const inputPath = `./uploads`
-  const outputPath = `./uploads/outputs`
+  const logo = `./logo`
+  const outputPath = `./outputs`
 
   if (!fs.existsSync(outputPath)) {
     fs.mkdirSync(outputPath, {recursive: true})
@@ -58,8 +58,8 @@ app.post("/upload", upload.single('file'), function(req, res){
   // ffmpeg
   // const ffmpegCommand = `ffmpeg -i ${videoPath} -codec:v libx264 -codec:a aac -hls_time 10 -hls_playlist_type vod -hls_segment_filename "${outputPath}/segment%03d.ts" -start_number 0 ${hlsPath}`;  /** ffmpeg transcoding and packaging */
   // const ffmpegCommand = `ffmpeg -i ${videoPath} -vf "scale=-2:${scale}" -c:v libx264 -b:v ${bitrateVideo}k -c:a aac -b:a ${bitrateAudio}k "${outputPath}/output_360p.mp4"`; /** ffmpeg transcoding video only*/
-  const ffmpegCommand = `ffmpeg -i ${videoPath} -i "${inputPath}/toffee-vertical-logo-high-res.png" -filter_complex "[1:v]scale=iw*0.1:-1[logo];[0:v][logo]overlay=main_w-overlay_w-10:10" -c:v libx264 -b:v 800k -c:a aac -b:a 96k "${outputPath}/output_360p.mp4" && ffmpeg -i ${videoPath} -i "${inputPath}/toffee-vertical-logo-high-res.png" -filter_complex "[1:v]scale=iw*0.1:-1[logo];[0:v][logo]overlay=main_w-overlay_w-10:10" -c:v libx264 -b:v 1200k -c:a aac -b:a 128k "${outputPath}/output_480p.mp4" && ffmpeg -i ${videoPath} -i "${inputPath}/toffee-vertical-logo-high-res.png" -filter_complex "[1:v]scale=iw*0.1:-1[logo];[0:v][logo]overlay=main_w-overlay_w-10:10" -c:v libx264 -b:v 2500k -c:a aac -b:a 128k "${outputPath}/output_720p.mp4" && ffmpeg -i ${videoPath} -i "${inputPath}/toffee-vertical-logo-high-res.png" -filter_complex "[1:v]scale=iw*0.1:-1[logo];[0:v][logo]overlay=main_w-overlay_w-10:10" -c:v libx264 -b:v 5000k -c:a aac -b:a 192k "${outputPath}/output_1080p.mp4"` /** ffmpeg transcoding video with logo*/
-  // console.log(ffmpegCommand);
+  const ffmpegCommand = `ffmpeg -i ${videoPath} -i "${logo}/toffee-vertical-logo-high-res.png" -filter_complex "[1:v]scale=iw*0.1:-1[logo];[0:v][logo]overlay=main_w-overlay_w-10:10" -c:v libx264 -b:v 800k -c:a aac -b:a 96k "${outputPath}/output_360p.mp4" && ffmpeg -i ${videoPath} -i "${logo}/toffee-vertical-logo-high-res.png" -filter_complex "[1:v]scale=iw*0.1:-1[logo];[0:v][logo]overlay=main_w-overlay_w-10:10" -c:v libx264 -b:v 1200k -c:a aac -b:a 128k "${outputPath}/output_480p.mp4" && ffmpeg -i ${videoPath} -i "${logo}/toffee-vertical-logo-high-res.png" -filter_complex "[1:v]scale=iw*0.1:-1[logo];[0:v][logo]overlay=main_w-overlay_w-10:10" -c:v libx264 -b:v 2500k -c:a aac -b:a 128k "${outputPath}/output_720p.mp4" && ffmpeg -i ${videoPath} -i "${logo}/toffee-vertical-logo-high-res.png" -filter_complex "[1:v]scale=iw*0.1:-1[logo];[0:v][logo]overlay=main_w-overlay_w-10:10" -c:v libx264 -b:v 5000k -c:a aac -b:a 192k "${outputPath}/output_1080p.mp4"` /** ffmpeg transcoding video with logo*/
+  console.log(`ffmpegCommand ${ffmpegCommand}`);
 
   // no queue because of POC, not to be used in production
   exec(ffmpegCommand, (error, stdout, stderr) => {

@@ -46,7 +46,10 @@ app.use("/uploads", express.static("uploads"))
 
 app.post("/upload", upload.single('file'), function(req, res){
   const videoPath = req.file.path
-  console.log(`videoPath ${videoPath}`)
+  console.log(`videoPath ${videoPath}`);
+
+  let ffmpegCommand, resolution = [360, 480, 720, 1080]
+  
   const { scale, bitrateVideo, bitrateAudio } = req.body;
   const logo = `./logo`
   const outputPath = `./outputs`
@@ -55,28 +58,64 @@ app.post("/upload", upload.single('file'), function(req, res){
     fs.mkdirSync(outputPath, {recursive: true})
   }
 
-  // ffmpeg
-  // const ffmpegCommand = `ffmpeg -i ${videoPath} -codec:v libx264 -codec:a aac -hls_time 10 -hls_playlist_type vod -hls_segment_filename "${outputPath}/segment%03d.ts" -start_number 0 ${hlsPath}`;  /** ffmpeg transcoding and packaging */
-  // const ffmpegCommand = `ffmpeg -i ${videoPath} -vf "scale=-2:${scale}" -c:v libx264 -b:v ${bitrateVideo}k -c:a aac -b:a ${bitrateAudio}k "${outputPath}/output_360p.mp4"`; /** ffmpeg transcoding video only*/
-  const ffmpegCommand = `ffmpeg -i ${videoPath} -i "${logo}/toffee-vertical-logo-high-res.png" -filter_complex "[1:v]scale=iw*0.1:-1[logo];[0:v][logo]overlay=main_w-overlay_w-10:10" -c:v libx264 -b:v 800k -c:a aac -b:a 96k "${outputPath}/output_360p.mp4" && ffmpeg -i ${videoPath} -i "${logo}/toffee-vertical-logo-high-res.png" -filter_complex "[1:v]scale=iw*0.1:-1[logo];[0:v][logo]overlay=main_w-overlay_w-10:10" -c:v libx264 -b:v 1200k -c:a aac -b:a 128k "${outputPath}/output_480p.mp4" && ffmpeg -i ${videoPath} -i "${logo}/toffee-vertical-logo-high-res.png" -filter_complex "[1:v]scale=iw*0.1:-1[logo];[0:v][logo]overlay=main_w-overlay_w-10:10" -c:v libx264 -b:v 2500k -c:a aac -b:a 128k "${outputPath}/output_720p.mp4" && ffmpeg -i ${videoPath} -i "${logo}/toffee-vertical-logo-high-res.png" -filter_complex "[1:v]scale=iw*0.1:-1[logo];[0:v][logo]overlay=main_w-overlay_w-10:10" -c:v libx264 -b:v 5000k -c:a aac -b:a 192k "${outputPath}/output_1080p.mp4"` /** ffmpeg transcoding video with logo*/
-  console.log(`ffmpegCommand ${ffmpegCommand}`);
-
-  // no queue because of POC, not to be used in production
-  exec(ffmpegCommand, (error, stdout, stderr) => {
-    if (error) {
-      console.log(`exec error: ${error}`)
-    }
-    // console.log(`stdout: ${stdout}`)
-    // console.log(`stderr: ${stderr}`)
-    // const videoUrl = `http://localhost:8000/uploads/outputs/${lessonId}/manifest.m3u8`;
-
-    res.json({
-      message: "Video transcoded successfully",
-      ffmpegCommand: ffmpegCommand,
-      // lessonId: lessonId
+  resolution.forEach(async (r) => {
+    ffmpegCommand = `ffmpeg -i ${videoPath} -i "${logo}/toffee-vertical-logo-high-res.png" -filter_complex "[1:v]scale=iw*0.1:-1[logo];[0:v][logo]overlay=main_w-overlay_w-10:10" -c:v libx264 -b:v 800k -c:a aac -b:a 96k "${outputPath}/output_${r}p.mp4"` 
+    await exec(ffmpegCommand, (error, stdout, stderr) => {
+      console.log(`ffmpegCommand ${ffmpegCommand}`);
+      if (error) {
+        console.log(`exec error: ${error}`)
+      }
     })
+  });
+
+  // const ffmpegCommand360 = `ffmpeg -i ${videoPath} -i "${logo}/toffee-vertical-logo-high-res.png" -filter_complex "[1:v]scale=iw*0.1:-1[logo];[0:v][logo]overlay=main_w-overlay_w-10:10" -c:v libx264 -b:v 800k -c:a aac -b:a 96k "${outputPath}/output_360p.mp4"` 
+  
+  // const ffmpegCommand480 = `ffmpeg -i ${videoPath} -i "${logo}/toffee-vertical-logo-high-res.png" -filter_complex "[1:v]scale=iw*0.1:-1[logo];[0:v][logo]overlay=main_w-overlay_w-10:10" -c:v libx264 -b:v 1200k -c:a aac -b:a 128k "${outputPath}/output_480p.mp4"` 
+  
+  // const ffmpegCommand720 = `ffmpeg -i ${videoPath} -i "${logo}/toffee-vertical-logo-high-res.png" -filter_complex "[1:v]scale=iw*0.1:-1[logo];[0:v][logo]overlay=main_w-overlay_w-10:10" -c:v libx264 -b:v 2500k -c:a aac -b:a 128k "${outputPath}/output_720p.mp4"` 
+  
+  // const ffmpegCommand1080 = `ffmpeg -i ${videoPath} -i "${logo}/toffee-vertical-logo-high-res.png" -filter_complex "[1:v]scale=iw*0.1:-1[logo];[0:v][logo]overlay=main_w-overlay_w-10:10" -c:v libx264 -b:v 5000k -c:a aac -b:a 192k "${outputPath}/output_1080p.mp4"` 
+
+   
+// no queue because of POC, not to be used in production
+//  exec(ffmpegCommand360, (error, stdout, stderr) => {
+//     console.log(`ffmpegCommand ${ffmpegCommand360}`);
+//     if (error) {
+//       console.log(`exec error: ${error}`)
+//     }
+//   })
+    
+//   await exec(ffmpegCommand480, (error, stdout, stderr) => {
+//     console.log(`ffmpegCommand ${ffmpegCommand480}`);
+//     if (error) {
+//       console.log(`exec error: ${error}`)
+//     }
+//   })
+    
+//   await exec(ffmpegCommand720, (error, stdout, stderr) => {
+//     console.log(`ffmpegCommand ${ffmpegCommand720}`);
+//     if (error) {
+//       console.log(`exec error: ${error}`)
+//     }
+//   })
+    
+//   await exec(ffmpegCommand1080, (error, stdout, stderr) => {
+//     console.log(`ffmpegCommand ${ffmpegCommand1080}`);
+//     if (error) {
+//       console.log(`exec error: ${error}`)
+//     }
+//   })
+
+  res.json({
+    message: "Video transcoded successfully",
+    data: [],
   })
+
 })
+
+
+
+
 
 app.post("/package", function(req, res){
   const inputPath = `./uploads/outputs`
@@ -110,6 +149,6 @@ app.post("/package", function(req, res){
   })
 })
 
-app.listen(8000, function(){
-  console.log("App is listening at port 8000...")
+app.listen(8080, function(){
+  console.log("App is listening at port 8080...")
 })

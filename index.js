@@ -172,5 +172,6 @@ app.post("/package", function(req, res){
 })
 
 app.listen(8080, function(){
+  infoLogStream.write(`[${timestamp}] App is listening at port 8080...\n`);
   console.log("App is listening at port 8080...")
 })

@@ -80,7 +80,7 @@ app.post("/upload", upload.single('file'), function(req, res){
   //   })
   // });
 
-  const ffmpegCommand360 = `ffmpeg -i ${videoPath} -i "${logo}/toffee-vertical-logo-high-res.png" -filter_complex "[1:v]scale=iw*0.1:-1[logo];[0:v][logo]overlay=main_w-overlay_w-10:10" -c:v libx264 -b:v 800k -c:a aac -b:a 96k "${outputPath}/output_360p.mp4"` 
+  const ffmpegCommand360 = `ffmpeg -i ${videoPath} -i "${logo}/toffee-vertical-logo-high-res.jpg" -filter_complex "[1:v]scale=iw*0.1:-1[logo];[0:v][logo]overlay=main_w-overlay_w-10:10" -c:v libx264 -b:v 800k -c:a aac -b:a 96k "${outputPath}/output_360p.mp4"` 
   
   const ffmpegCommand480 = `ffmpeg -i ${videoPath} -i "${logo}/toffee-vertical-logo-high-res.png" -filter_complex "[1:v]scale=iw*0.1:-1[logo];[0:v][logo]overlay=main_w-overlay_w-10:10" -c:v libx264 -b:v 1200k -c:a aac -b:a 128k "${outputPath}/output_480p.mp4"` 
   

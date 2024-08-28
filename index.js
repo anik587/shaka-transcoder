@@ -79,14 +79,14 @@ app.post("/upload", upload.single('file'), function(req, res){
    
 // no queue because of POC, not to be used in production
  exec(ffmpegCommand360, (error, stdout, stderr) => {
-    console.log(`ffmpegCommand ${ffmpegCommand360}`);
+    // console.log(`ffmpegCommand ${ffmpegCommand360}`);
     if (error) {
       console.log(`exec error: ${error}`)
     }
   })
     
   exec(ffmpegCommand480, (error, stdout, stderr) => {
-    console.log(`ffmpegCommand ${ffmpegCommand480}`);
+    // console.log(`ffmpegCommand ${ffmpegCommand480}`);
     if (error) {
       console.log(`exec error: ${error}`)
     }

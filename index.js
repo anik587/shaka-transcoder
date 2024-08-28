@@ -2,10 +2,22 @@ import express from "express"
 import cors from "cors"
 import multer from "multer"
 import { v4 as uuidv4 } from "uuid"
-import path from "path"
-import fs from "fs"
 import {exec} from "child_process" // watch out
 import { stderr, stdout } from "process"
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const infoLogFilePath = `${__dirname}/app.log`;
+const infoLogStream = fs.createWriteStream(infoLogFilePath, { flags: 'a' }); 
+
+const errorLogFilePath = `${__dirname}/app.log`;
+const errorLogStream = fs.createWriteStream(errorLogFilePath, { flags: 'a' }); 
+
 
 const app = express()
 
@@ -80,15 +92,21 @@ app.post("/upload", upload.single('file'), function(req, res){
 // no queue because of POC, not to be used in production
  exec(ffmpegCommand360, (error, stdout, stderr) => {
     // console.log(`ffmpegCommand ${ffmpegCommand360}`);
+    const timestamp = new Date().toISOString();
+    infoLogStream.write(`[${timestamp}] ${ffmpegCommand360}\n`);
     if (error) {
-      console.log(`exec error: ${error}`)
+      errorLogStream.write(`[${timestamp}] ${error}\n`);
+      //console.log(`exec error: ${error}`)
     }
   })
     
   exec(ffmpegCommand480, (error, stdout, stderr) => {
     // console.log(`ffmpegCommand ${ffmpegCommand480}`);
+    const timestamp = new Date().toISOString();
+    infoLogStream.write(`[${timestamp}] ${ffmpegCommand480}\n`);
     if (error) {
-      console.log(`exec error: ${error}`)
+      errorLogStream.write(`[${timestamp}] ${error}\n`);
+      //console.log(`exec error: ${error}`)
     }
   })
     

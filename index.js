@@ -98,17 +98,21 @@ app.post("/upload", upload.single('file'), function(req, res){
       errorLogStream.write(`[${timestamp}] ${error}\n`);
       //console.log(`exec error: ${error}`)
     }
+    res.json({
+      message: "Video transcoded successfully",
+      data: [],
+    })
   })
     
-  exec(ffmpegCommand480, (error, stdout, stderr) => {
-    // console.log(`ffmpegCommand ${ffmpegCommand480}`);
-    const timestamp = new Date().toISOString();
-    infoLogStream.write(`[${timestamp}] ${ffmpegCommand480}\n`);
-    if (error) {
-      errorLogStream.write(`[${timestamp}] ${error}\n`);
-      //console.log(`exec error: ${error}`)
-    }
-  })
+  // exec(ffmpegCommand480, (error, stdout, stderr) => {
+  //   // console.log(`ffmpegCommand ${ffmpegCommand480}`);
+  //   const timestamp = new Date().toISOString();
+  //   infoLogStream.write(`[${timestamp}] ${ffmpegCommand480}\n`);
+  //   if (error) {
+  //     errorLogStream.write(`[${timestamp}] ${error}\n`);
+  //     //console.log(`exec error: ${error}`)
+  //   }
+  // })
     
 //   await exec(ffmpegCommand720, (error, stdout, stderr) => {
 //     console.log(`ffmpegCommand ${ffmpegCommand720}`);
@@ -124,10 +128,10 @@ app.post("/upload", upload.single('file'), function(req, res){
 //     }
 //   })
 
-  res.json({
-    message: "Video transcoded successfully",
-    data: [],
-  })
+  // res.json({
+  //   message: "Video transcoded successfully",
+  //   data: [],
+  // })
 
 })
 

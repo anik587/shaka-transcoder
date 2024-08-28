@@ -58,19 +58,19 @@ app.post("/upload", upload.single('file'), function(req, res){
     fs.mkdirSync(outputPath, {recursive: true})
   }
 
-  resolution.forEach(async (r) => {
-    ffmpegCommand = `ffmpeg -i ${videoPath} -i "${logo}/toffee-vertical-logo-high-res.png" -filter_complex "[1:v]scale=iw*0.1:-1[logo];[0:v][logo]overlay=main_w-overlay_w-10:10" -c:v libx264 -b:v 800k -c:a aac -b:a 96k "${outputPath}/output_${r}p.mp4"` 
-    await exec(ffmpegCommand, (error, stdout, stderr) => {
-      console.log(`ffmpegCommand ${ffmpegCommand}`);
-      if (error) {
-        console.log(`exec error: ${error}`)
-      }
-    })
-  });
+  // resolution.forEach(async (r) => {
+  //   ffmpegCommand = `ffmpeg -i ${videoPath} -i "${logo}/toffee-vertical-logo-high-res.png" -filter_complex "[1:v]scale=iw*0.1:-1[logo];[0:v][logo]overlay=main_w-overlay_w-10:10" -c:v libx264 -b:v 800k -c:a aac -b:a 96k "${outputPath}/output_${r}p.mp4"` 
+  //   await exec(ffmpegCommand, (error, stdout, stderr) => {
+  //     console.log(`ffmpegCommand ${ffmpegCommand}`);
+  //     if (error) {
+  //       console.log(`exec error: ${error}`)
+  //     }
+  //   })
+  // });
 
-  // const ffmpegCommand360 = `ffmpeg -i ${videoPath} -i "${logo}/toffee-vertical-logo-high-res.png" -filter_complex "[1:v]scale=iw*0.1:-1[logo];[0:v][logo]overlay=main_w-overlay_w-10:10" -c:v libx264 -b:v 800k -c:a aac -b:a 96k "${outputPath}/output_360p.mp4"` 
+  const ffmpegCommand360 = `ffmpeg -i ${videoPath} -i "${logo}/toffee-vertical-logo-high-res.png" -filter_complex "[1:v]scale=iw*0.1:-1[logo];[0:v][logo]overlay=main_w-overlay_w-10:10" -c:v libx264 -b:v 800k -c:a aac -b:a 96k "${outputPath}/output_360p.mp4"` 
   
-  // const ffmpegCommand480 = `ffmpeg -i ${videoPath} -i "${logo}/toffee-vertical-logo-high-res.png" -filter_complex "[1:v]scale=iw*0.1:-1[logo];[0:v][logo]overlay=main_w-overlay_w-10:10" -c:v libx264 -b:v 1200k -c:a aac -b:a 128k "${outputPath}/output_480p.mp4"` 
+  const ffmpegCommand480 = `ffmpeg -i ${videoPath} -i "${logo}/toffee-vertical-logo-high-res.png" -filter_complex "[1:v]scale=iw*0.1:-1[logo];[0:v][logo]overlay=main_w-overlay_w-10:10" -c:v libx264 -b:v 1200k -c:a aac -b:a 128k "${outputPath}/output_480p.mp4"` 
   
   // const ffmpegCommand720 = `ffmpeg -i ${videoPath} -i "${logo}/toffee-vertical-logo-high-res.png" -filter_complex "[1:v]scale=iw*0.1:-1[logo];[0:v][logo]overlay=main_w-overlay_w-10:10" -c:v libx264 -b:v 2500k -c:a aac -b:a 128k "${outputPath}/output_720p.mp4"` 
   
@@ -78,19 +78,19 @@ app.post("/upload", upload.single('file'), function(req, res){
 
    
 // no queue because of POC, not to be used in production
-//  exec(ffmpegCommand360, (error, stdout, stderr) => {
-//     console.log(`ffmpegCommand ${ffmpegCommand360}`);
-//     if (error) {
-//       console.log(`exec error: ${error}`)
-//     }
-//   })
+ exec(ffmpegCommand360, (error, stdout, stderr) => {
+    console.log(`ffmpegCommand ${ffmpegCommand360}`);
+    if (error) {
+      console.log(`exec error: ${error}`)
+    }
+  })
     
-//   await exec(ffmpegCommand480, (error, stdout, stderr) => {
-//     console.log(`ffmpegCommand ${ffmpegCommand480}`);
-//     if (error) {
-//       console.log(`exec error: ${error}`)
-//     }
-//   })
+  exec(ffmpegCommand480, (error, stdout, stderr) => {
+    console.log(`ffmpegCommand ${ffmpegCommand480}`);
+    if (error) {
+      console.log(`exec error: ${error}`)
+    }
+  })
     
 //   await exec(ffmpegCommand720, (error, stdout, stderr) => {
 //     console.log(`ffmpegCommand ${ffmpegCommand720}`);

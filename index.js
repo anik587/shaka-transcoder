@@ -15,7 +15,7 @@ const __dirname = dirname(__filename);
 const infoLogFilePath = `${__dirname}/app.log`;
 const infoLogStream = fs.createWriteStream(infoLogFilePath, { flags: 'a' }); 
 
-const errorLogFilePath = `${__dirname}/app.log`;
+const errorLogFilePath = `${__dirname}/error.log`;
 const errorLogStream = fs.createWriteStream(errorLogFilePath, { flags: 'a' }); 
 
 

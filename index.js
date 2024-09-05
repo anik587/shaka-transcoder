@@ -104,15 +104,15 @@ app.post("/upload", upload.single('file'), function(req, res){
     })
   })
     
-  // exec(ffmpegCommand480, (error, stdout, stderr) => {
-  //   // console.log(`ffmpegCommand ${ffmpegCommand480}`);
-  //   const timestamp = new Date().toISOString();
-  //   infoLogStream.write(`[${timestamp}] ${ffmpegCommand480}\n`);
-  //   if (error) {
-  //     errorLogStream.write(`[${timestamp}] ${error}\n`);
-  //     //console.log(`exec error: ${error}`)
-  //   }
-  // })
+  exec(ffmpegCommand480, (error, stdout, stderr) => {
+    // console.log(`ffmpegCommand ${ffmpegCommand480}`);
+    const timestamp = new Date().toISOString();
+    infoLogStream.write(`[${timestamp}] ${ffmpegCommand480}\n`);
+    if (error) {
+      errorLogStream.write(`[${timestamp}] ${error}\n`);
+      //console.log(`exec error: ${error}`)
+    }
+  })
     
 //   await exec(ffmpegCommand720, (error, stdout, stderr) => {
 //     console.log(`ffmpegCommand ${ffmpegCommand720}`);

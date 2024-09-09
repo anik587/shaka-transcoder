@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: node-app
+    ports:
+      - "8765:8765" # Exposing port 3000 (modify if your app runs on a different port)
+    environment:
+      NODE_ENV: production # You can change this to 'development' if needed
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules # Prevents overwriting node_modules
+    restart: always # Ensures the container restarts on failures
+

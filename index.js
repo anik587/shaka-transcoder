@@ -94,20 +94,21 @@ app.post("/upload", upload.single('file'), function(req, res){
     // console.log(`ffmpegCommand ${ffmpegCommand360}`);
     const timestamp = new Date().toISOString();
     infoLogStream.write(`[${timestamp}] ${ffmpegCommand360}\n`);
+
+    console.log("ffmpegCommand360 Success");
+    
     if (error) {
       errorLogStream.write(`[${timestamp}] ${error}\n`);
       //console.log(`exec error: ${error}`)
     }
-    res.json({
-      message: "Video transcoded successfully",
-      data: [],
-    })
   })
     
   exec(ffmpegCommand480, (error, stdout, stderr) => {
     // console.log(`ffmpegCommand ${ffmpegCommand480}`);
     const timestamp = new Date().toISOString();
     infoLogStream.write(`[${timestamp}] ${ffmpegCommand480}\n`);
+    console.log("ffmpegCommand480 Success");
+    
     if (error) {
       errorLogStream.write(`[${timestamp}] ${error}\n`);
       //console.log(`exec error: ${error}`)
@@ -128,10 +129,10 @@ app.post("/upload", upload.single('file'), function(req, res){
 //     }
 //   })
 
-  // res.json({
-  //   message: "Video transcoded successfully",
-  //   data: [],
-  // })
+  res.json({
+    message: "Video transcoded successfully",
+    data: [],
+  })
 
 })
 
@@ -140,7 +141,7 @@ app.post("/upload", upload.single('file'), function(req, res){
 
 
 app.post("/package", function(req, res){
-  const inputPath = `./uploads/outputs`
+  const inputPath = `./outputs`
   const { audioKeyId, audioKey, audioKeyIv, hdKeyId, hdKey, hdKeyIv, sdKeyId, sdKey, sdKeyIv, } = req.body;
   const outputPath = `./uploads/outputs/packager_outputs`
 
@@ -149,7 +150,8 @@ app.post("/package", function(req, res){
   }
 
   // shaka packager
-  const packagerhlsCommand = `packager in="${inputPath}/output_360p.mp4",stream=audio,output="${outputPath}/audio.mp4",drm_label=AUDIO in="${inputPath}/output_360p.mp4",stream=video,output="${outputPath}/h264_360p.mp4",drm_label=AUDIO in="${inputPath}/output_480p.mp4",stream=video,output="${outputPath}/h264_480p.mp4",drm_label=AUDIO in="${inputPath}/output_720p.mp4",stream=video,output="${outputPath}/h264_720p.mp4",drm_label=AUDIO in="${inputPath}/output_1080p.mp4",stream=video,output="${outputPath}/h264_1080p.mp4",drm_label=AUDIO --protection_scheme cbcs --enable_raw_key_encryption --keys label=AUDIO:key_id=${audioKeyId}:key=${audioKey}:iv=${audioKeyIv} --protection_systems FairPlay --hls_master_playlist_output="${outputPath}/h264_master.m3u8" --hls_key_uri="skd://${audioKeyId}"`  /** for hls content*/
+  const packagerhlsCommand = `packager in="${inputPath}/output_360p.mp4",stream=audio,output="${outputPath}/audio.mp4",drm_label=AUDIO in="${inputPath}/output_360p.mp4",stream=video,output="${outputPath}/h264_360p.mp4",drm_label=AUDIO in="${inputPath}/output_480p.mp4",stream=video,output="${outputPath}/h264_480p.mp4",drm_label=AUDIO --protection_scheme cbcs --enable_raw_key_encryption --keys label=AUDIO:key_id=${audioKeyId}:key=${audioKey}:iv=${audioKeyIv} --protection_systems FairPlay --hls_master_playlist_output="${outputPath}/h264_master.m3u8" --hls_key_uri="skd://${audioKeyId}"` 
+  /** for hls content*/
   // const packagerDashCommand = `packager in="${inputPath}/output_360p.mp4",stream=audio,output="${outputPath}/audio.mp4",drm_label=AUDIO in="${inputPath}/output_360p.mp4",stream=video,output="${outputPath}/h264_360p.mp4",drm_label=SD in="${inputPath}/output_480p.mp4",stream=video,output="${outputPath}/h264_480p.mp4",drm_label=SD in="${inputPath}/output_720p.mp4",stream=video,output="${outputPath}/h264_720p.mp4",drm_label=HD in="${inputPath}/output_1080p.mp4",stream=video,output="${outputPath}/h264_1080p.mp4",drm_label=HD --enable_raw_key_encryption --keys label=AUDIO:key_id=${audioKeyId}:key=${audioKey}:iv=${audioKeyIv},label=SD:key_id=${sdKeyId}:key=${sdKey}:iv=${sdKeyIv},label=HD:key_id=${hdKeyId}:key=${hdKey}:iv=${hdKeyIv} --mpd_output "${outputPath}/h264.mpd"`   /** for hls content*/
   // console.log(packagerCommand);```
 
@@ -171,8 +173,8 @@ app.post("/package", function(req, res){
   })
 })
 
-app.listen(8080, function(){
+app.listen(8765, function(){
   const timestamp = new Date().toISOString();
-  infoLogStream.write(`[${timestamp}] App is listening at port 8080...\n`);
-  console.log("App is listening at port 8080...")
+  infoLogStream.write(`[${timestamp}] App is listening at port 8765...\n`);
+  console.log("App is listening at port 8765...")
 })
